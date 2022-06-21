@@ -43,13 +43,13 @@ unzip ./data/userSet.zip
 * Test
     * Usage :  
       ```
-      $ python GCN_train.py  
+      $ python GCN_test.py  
             --withSuspectValue <Whether to use the suspect value (default:True)> 
             --run <Decide how many times to run (default:10)> 
       ```
     * Example:
       ```
-      $ python GCN_train.py  
+      $ python GCN_test.py  
             --withSuspectValue True
             --run 10
       ```
