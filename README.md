@@ -10,7 +10,7 @@
 
 ## Quickstart
 ```
-unzip userSet.zip
+unzip ./data/userSet.zip
 ```
 ### GCN
 * Train
