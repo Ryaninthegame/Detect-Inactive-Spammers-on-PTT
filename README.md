@@ -8,6 +8,16 @@
 * numpy : 1.19.1
 * argparse : 1.1
 
+## File Description
+* adjacentMatrix.npz : Adjacent matrix, shape:(44602, 44602)
+* activeValue.json : User's active value
+* suspectValue,json : User's suspect value
+* indexUser.json : User -> adjacent matrix index
+* userIndex.json : Adjacent matrix index -> user
+* normalUser.json : Normal user list
+* spammer.json : Spammer list
+* userLabel.json : User label, normal user is 0, spammer is 1
+
 ## Quickstart
 ```
 unzip ./data/userSet.zip
