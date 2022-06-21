@@ -1,6 +1,6 @@
 # Using-Graph-Neural-Networks-to-Detect-Inactive-Spammers-on-PTT
-## Set Up
-Tested Under Python 3.8.13.
+## Setup
+Tested under Python 3.8.13 in Ubuntu.
 
 Install the required packages by
 ```
@@ -9,6 +9,7 @@ pip install -r requirements.txt
 
 
 ## File Description
+The following files are under folder data/information/
 * adjacentMatrix.npz : Adjacent matrix, shape:(44602, 44602)
 * activeValue.json : User's active value
 * suspectValue,json : User's suspect value
