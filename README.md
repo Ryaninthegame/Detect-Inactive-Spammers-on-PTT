@@ -1,12 +1,12 @@
 # Using-Graph-Neural-Networks-to-Detect-Inactive-Spammers-on-PTT
 ## Set Up
-* Python : 3.6.10
-* Pytorch : 1.6.0
-* DGL : 0.6.1
-* scipy : 1.5.2
-* sklearn : 0.23.2
-* numpy : 1.19.1
-* argparse : 1.1
+Tested Under Python 3.8.13.
+
+Install the required packages by
+```
+pip install -r requirements.txt
+```
+
 
 ## File Description
 * adjacentMatrix.npz : Adjacent matrix, shape:(44602, 44602)
