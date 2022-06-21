@@ -177,13 +177,10 @@ if __name__ == "__main__":
                          default = 10,
                          help = "Run", 
                         type=int)
-    _parser.add_argument("--numHeads",
-                         default = 4,
-                         help = "numHeads", 
-                        type=int)
+                        
     _args = _parser.parse_args()
     
-    _withSuspectValue, _run, _numHeads = _args.withSuspectValue, _args.run, _args.numHeads
+    _withSuspectValue, _run = _args.withSuspectValue, _args.run
     
     _withSuspectValue = True
     _adjacentMatrix, _featureSet, _label = loadData(_withSuspectValue)
