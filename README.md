@@ -62,7 +62,7 @@ unzip ./data/userSet.zip
             --withSuspectValue <Whether to use the suspect value (default:True)> 
             --run <Decide how many times to run (default:10)> 
             --cutting < Batch = (DataSize/cutting), Smaller cutting, larger Batch size (default:3)>
-            --epoch <epoch (default:1000)>
+            --epoch <epoch (default:5000)>
             --K <TAGCN Hyperparameter (default:3)>
       ```
     * Example:
@@ -71,7 +71,7 @@ unzip ./data/userSet.zip
             --withSuspectValue True
             --run 10
             --cutting 3
-            --epoch 1000
+            --epoch 5000
             --K 3
       ```
 * Test
