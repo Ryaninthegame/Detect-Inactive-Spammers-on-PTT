@@ -109,7 +109,10 @@ def train(epoch, index, cutting, adjacentMatrix, feature, label, trainIndex):
     batch = int(len(trainIndex)/cutting)
     for i in range(epoch):
         for j in range(cutting):
-            indexPerBatch = trainIndex[index[j*batch:(j+1)*batch]].cuda()
+            if torch.cuda.is_available():
+                indexPerBatch = trainIndex[index[j*batch:(j+1)*batch]].cuda()
+            else:
+                indexPerBatch = trainIndex[index[j*batch:(j+1)*batch]]
             optimizer.zero_grad()
             output = model(feature, adjacentMatrix)
             loss = criterion(output[indexPerBatch], label[indexPerBatch])
@@ -151,7 +154,8 @@ if __name__ == "__main__":
         _startTime = time.time()
         _savePath = './TAGCN_' + str(_i) + '.pth'
         model = net(_k, _withSuspectValue)
-        model.cuda()
+        if torch.cuda.is_available():
+            model.cuda()
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=0.01)
         _lossSet = train(_epoch, _updateLossIndex, _cutting, _adjacentMatrix, _featureSet, _label, _trainIndex)

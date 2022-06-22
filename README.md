@@ -1,14 +1,15 @@
 # Using-Graph-Neural-Networks-to-Detect-Inactive-Spammers-on-PTT
-## Set Up
-* Python : 3.6.10
-* Pytorch : 1.6.0
-* DGL : 0.6.1
-* scipy : 1.5.2
-* sklearn : 0.23.2
-* numpy : 1.19.1
-* argparse : 1.1
+## Setup
+Tested under Python 3.8.13 in Ubuntu.
+
+Install the required packages by
+```
+pip install -r requirements.txt
+```
+
 
 ## File Description
+The following files are under folder data/information/
 * adjacentMatrix.npz : Adjacent matrix, shape:(44602, 44602)
 * activeValue.json : User's active value
 * suspectValue,json : User's suspect value
@@ -43,13 +44,13 @@ unzip ./data/userSet.zip
 * Test
     * Usage :  
       ```
-      $ python GCN_train.py  
+      $ python GCN_test.py  
             --withSuspectValue <Whether to use the suspect value (default:True)> 
             --run <Decide how many times to run (default:10)> 
       ```
     * Example:
       ```
-      $ python GCN_train.py  
+      $ python GCN_test.py  
             --withSuspectValue True
             --run 10
       ```
