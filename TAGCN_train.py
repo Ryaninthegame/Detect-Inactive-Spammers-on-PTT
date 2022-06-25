@@ -1,4 +1,5 @@
 import argparse
+import math
 import os
 import json
 import time
@@ -94,13 +95,12 @@ def getFeature(withSuspectValue):
 
 
 def loadData(withSuspectValue):
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     path = "./data/information/"
     adjacentMatrix = sp.load_npz(path+"adjacentMatrix.npz")
-    adjacentMatrix = dgl.from_scipy(adjacentMatrix).to(device)
+    adjacentMatrix = dgl.from_scipy(adjacentMatrix).to(_device)
     featureSet, label = getFeature(withSuspectValue)
-    featureSet = torch.from_numpy(np.array(featureSet)).float().to(device)
-    label = torch.Tensor(label).long().to(device)
+    featureSet = torch.from_numpy(np.array(featureSet)).float().to(_device)
+    label = torch.Tensor(label).long().to(_device)
     return adjacentMatrix, featureSet, label
 
 
@@ -109,10 +109,7 @@ def train(epoch, index, cutting, adjacentMatrix, feature, label, trainIndex):
     batch = int(len(trainIndex)/cutting)
     for i in range(epoch):
         for j in range(cutting):
-            if torch.cuda.is_available():
-                indexPerBatch = trainIndex[index[j*batch:(j+1)*batch]].cuda()
-            else:
-                indexPerBatch = trainIndex[index[j*batch:(j+1)*batch]]
+            indexPerBatch = trainIndex[index[j*batch:(j+1)*batch]].to(_device)
             optimizer.zero_grad()
             output = model(feature, adjacentMatrix)
             loss = criterion(output[indexPerBatch], label[indexPerBatch])
@@ -147,6 +144,14 @@ if __name__ == "__main__":
     _args = _parser.parse_args()
     
     _withSuspectValue, _run, _cutting, _epoch, _k = _args.withSuspectValue, _args.run, _args.cutting, _args.epoch, _args.K
+    
+    if torch.cuda.is_available():
+        _device = torch.device("cuda:0")
+        print("Use cuda")
+    else:
+        _device = torch.device("cpu")
+        print("Can't find cuda, use cpu")
+    
     _adjacentMatrix, _featureSet, _label = loadData(_withSuspectValue)
     _trainIndex, _testIndex, _updateLossIndex = loadIndex(35681, 44602)
     
@@ -154,12 +159,11 @@ if __name__ == "__main__":
         _startTime = time.time()
         _savePath = './TAGCN_' + str(_i) + '.pth'
         model = net(_k, _withSuspectValue)
-        if torch.cuda.is_available():
-            model.cuda()
+        model.to(_device)
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=0.01)
         _lossSet = train(_epoch, _updateLossIndex, _cutting, _adjacentMatrix, _featureSet, _label, _trainIndex)
         
         torch.save(model, _savePath)
         _endTime = time.time()
-        print(_i, _savePath, "done")
+        print(_i, "Time :", round(_endTime-_startTime), "(s)  done")

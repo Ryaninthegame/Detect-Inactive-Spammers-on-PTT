@@ -90,13 +90,12 @@ def getFeature(withSuspectValue):
 
 
 def loadData(withSuspectValue):
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     path = "./data/information/"
     adjacentMatrix = sp.load_npz(path+"adjacentMatrix.npz")
-    adjacentMatrix = dgl.from_scipy(adjacentMatrix).to(device)
+    adjacentMatrix = dgl.from_scipy(adjacentMatrix).to(_device)
     featureSet, label = getFeature(withSuspectValue)
-    featureSet = torch.from_numpy(np.array(featureSet)).float().to(device)
-    label = torch.Tensor(label).long().to(device)
+    featureSet = torch.from_numpy(np.array(featureSet)).float().to(_device)
+    label = torch.Tensor(label).long().to(_device)
     return adjacentMatrix, featureSet, label
 
 
@@ -175,7 +174,13 @@ if __name__ == "__main__":
     
     _withSuspectValue, _run = _args.withSuspectValue, _args.run
     
-    _withSuspectValue = True
+    if torch.cuda.is_available():
+        _device = torch.device("cuda:0")
+        print("Use cuda")
+    else:
+        _device = torch.device("cpu")
+        print("Can't find cuda, use cpu")
+        
     _adjacentMatrix, _featureSet, _label = loadData(_withSuspectValue)
     
     _aurocSetALL, _auprcSetALL = [], []
@@ -189,7 +194,7 @@ if __name__ == "__main__":
         
         for _i in range(_run):
             modelPath = './GCN_' + str(_i) + '.pth'
-            model = torch.load(modelPath)  
+            model = torch.load(modelPath).to(_device)
             _output = test(_adjacentMatrix, _featureSet)
             _auroc = getAUC("ROC", _output, _lower, _upper)
             _auprc = getAUC("PR", _output, _lower, _upper)
@@ -214,7 +219,7 @@ if __name__ == "__main__":
             
             for _j in range(_run):
                 modelPath = './GCN_' + str(_j) + '.pth'
-                model = torch.load(modelPath)  
+                model = torch.load(modelPath).to(_device) 
                 _output = test(_adjacentMatrix, _featureSet)
 
                 _precision, _recall, _f1score = getF1score(_output, _lower, _upper, _topK)
