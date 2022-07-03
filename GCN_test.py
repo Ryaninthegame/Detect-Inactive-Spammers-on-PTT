@@ -166,13 +166,9 @@ if __name__ == "__main__":
                          default = True,
                          help = "Use Suspect Value", 
                         type=bool)
-    _parser.add_argument("--run",
-                         default = 10,
-                         help = "Run", 
-                        type=int)
     _args = _parser.parse_args()
     
-    _withSuspectValue, _run = _args.withSuspectValue, _args.run
+    _withSuspectValue = _args.withSuspectValue
     
     if torch.cuda.is_available():
         _device = torch.device("cuda:0")
@@ -182,52 +178,37 @@ if __name__ == "__main__":
         print("Can't find cuda, use cpu")
         
     _adjacentMatrix, _featureSet, _label = loadData(_withSuspectValue)
+    modelPath = './GCN.pth'
+    model = torch.load(modelPath).to(_device)
+    _output = test(_adjacentMatrix, _featureSet)
     
     _aurocSetALL, _auprcSetALL = [], []
     _intervals = [[0, 18], [18, 45], [45, 84], [84, 135], [135, 211], [211, 315], [315, 494], [494, 817], [817, 1663], 
                 [1663, 100000000000000000000000000]]
     
+    
     print("-------------------AUROC/AUPRC-------------------")
     for _interval in _intervals:
         _lower, _upper = _interval[0], _interval[1]
-        _aurocSet, _auprcSet = [], []
-        
-        for _i in range(_run):
-            modelPath = './GCN_' + str(_i) + '.pth'
-            model = torch.load(modelPath).to(_device)
-            _output = test(_adjacentMatrix, _featureSet)
-            _auroc = getAUC("ROC", _output, _lower, _upper)
-            _auprc = getAUC("PR", _output, _lower, _upper)
-            _aurocSet.append(_auroc)
-            _auprcSet.append(_auprc)
+        _auroc = getAUC("ROC", _output, _lower, _upper)
+        _auprc = getAUC("PR", _output, _lower, _upper)
         
         print(time.asctime(time.localtime(time.time())), _interval, "done")
-        print("AUROC :", np.around(np.median(_aurocSet), decimals=4), '±', np.around(np.std(_aurocSet), decimals=4))
-        print("AUPRC :", np.around(np.median(_auprcSet), decimals=4), '±', np.around(np.std(_auprcSet), decimals=4))
+        print("AUROC :", _auroc)
+        print("AUPRC :", _auprc)
     
     
     print("-------------------TopK F1score/Recall/Precision-------------------")
-    ## TopK F1score/Recall/Precision
     _intervals = [[0, 18], [18, 45], [0, 100000000000000000000000000]]
     _topKset = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
     
-    for _i in range(len(_intervals)):
-        _lower, _upper = _intervals[_i][0], _intervals[_i][1]
+    for _interval in _intervals:
+        _lower, _upper = _interval[0], _interval[1]
         
         for _topK in _topKset:
-            _precisionSet, _recallSet, _f1scoreSet = [], [], []
-            
-            for _j in range(_run):
-                modelPath = './GCN_' + str(_j) + '.pth'
-                model = torch.load(modelPath).to(_device) 
-                _output = test(_adjacentMatrix, _featureSet)
-
-                _precision, _recall, _f1score = getF1score(_output, _lower, _upper, _topK)
-                _f1scoreSet.append(_f1score)
-                _precisionSet.append(_precision)
-                _recallSet.append(_recall)
+            _precision, _recall, _f1score = getF1score(_output, _lower, _upper, _topK)
                 
-            print(time.asctime(time.localtime(time.time())), _intervals[_i], _topK, "done")
-            print("F1score   :", np.around(np.median(_f1scoreSet), decimals=4), '±', np.around(np.std(_f1scoreSet), decimals=4))
-            print("Recall    :", np.around(np.median(_recallSet), decimals=4), '±', np.around(np.std(_recallSet), decimals=4))
-            print("Precision :", np.around(np.median(_precisionSet), decimals=4), '±', np.around(np.std(_precisionSet), decimals=4))
+            print(time.asctime(time.localtime(time.time())), _interval, _topK, "done")
+            print("F1score   :", _f1score)
+            print("Recall    :", _recall)
+            print("Precision :", _precision)

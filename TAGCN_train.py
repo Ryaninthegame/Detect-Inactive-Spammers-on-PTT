@@ -125,10 +125,6 @@ if __name__ == "__main__":
                          default = True,
                          help = "Use Suspect Value", 
                         type=bool)
-    _parser.add_argument("--run",
-                         default = 10,
-                         help = "Run", 
-                        type=int)
     _parser.add_argument("--cutting",
                          default = 3,
                          help = "Batch = dataNum/cutting", 
@@ -143,7 +139,7 @@ if __name__ == "__main__":
                         type=int)
     _args = _parser.parse_args()
     
-    _withSuspectValue, _run, _cutting, _epoch, _k = _args.withSuspectValue, _args.run, _args.cutting, _args.epoch, _args.K
+    _withSuspectValue, _cutting, _epoch, _k = _args.withSuspectValue, _args.cutting, _args.epoch, _args.K
     
     if torch.cuda.is_available():
         _device = torch.device("cuda:0")
@@ -155,15 +151,14 @@ if __name__ == "__main__":
     _adjacentMatrix, _featureSet, _label = loadData(_withSuspectValue)
     _trainIndex, _testIndex, _updateLossIndex = loadIndex(35681, 44602)
     
-    for _i in range(_run):   
-        _startTime = time.time()
-        _savePath = './TAGCN_' + str(_i) + '.pth'
-        model = net(_k, _withSuspectValue)
-        model.to(_device)
-        criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(model.parameters(), lr=0.01)
-        _lossSet = train(_epoch, _updateLossIndex, _cutting, _adjacentMatrix, _featureSet, _label, _trainIndex)
-        
-        torch.save(model, _savePath)
-        _endTime = time.time()
-        print(_i, "Time :", round(_endTime-_startTime), "(s)  done")
+    _startTime = time.time()
+    _savePath = './TAGCN.pth'
+    model = net(_k, _withSuspectValue)
+    model.to(_device)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.01)
+    _lossSet = train(_epoch, _updateLossIndex, _cutting, _adjacentMatrix, _featureSet, _label, _trainIndex)
+
+    torch.save(model, _savePath)
+    _endTime = time.time()
+    print("Time :", round(_endTime-_startTime), "(s)  done")
