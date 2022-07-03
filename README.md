@@ -4,7 +4,7 @@ Tested under Python 3.8.13 in Ubuntu.
 
 Install the required packages by
 ```
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 
@@ -21,7 +21,7 @@ The following files are under folder data/information/
 
 ## Quickstart
 ```
-unzip ./data/userSet.zip
+$ unzip ./data/userSet.zip
 ```
 ### GCN
 * Train
