@@ -1,4 +1,4 @@
-# Using-Graph-Neural-Networks-to-Detect-Inactive-Spammers-on-PTT
+# Detect-Inactive-Spammers-on-PTT
 ## Setup
 Tested under Python 3.8.13 in Ubuntu.
 
