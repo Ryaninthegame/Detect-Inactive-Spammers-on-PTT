@@ -1,4 +1,10 @@
 # Detect-Inactive-Spammers-on-PTT
+
+This repo contains the implementation for the paper:
+**Detecting Inactive Cyberwarriors from Online Forums**, published at IEEE International Conference on Web Intelligence and Intelligent Agent Technology (WI) 2023.
+
+This study investigates the activity of cyberwarriors on a large online forum, revealing that only a small portion of them are active users. Interestingly, despite their role in spreading misinformation, these cyberwarriors typically remain silent during peaceful periods, becoming active only when needed. The research explores the difficulties in identifying cyberwarriors, particularly inactive ones, which are more challenging than detecting their active counterparts. The study suggests utilizing social information to detect cyberwarriors more effectively during their inactivity periods.
+
 ## Setup
 Tested under Python 3.8.13 in Ubuntu.
 
@@ -6,7 +12,6 @@ Install the required packages by
 ```
 $ pip install -r requirements.txt
 ```
-
 
 ## File Description
 The following files are under folder data/information/
@@ -89,9 +94,6 @@ $ unzip ./data/userSet.zip
             --run 10
       ```
       
-      
-      
-      
 ### GAT
 * Train
     * Usage :  
@@ -125,3 +127,13 @@ $ unzip ./data/userSet.zip
             --withSuspectValue True
             --run 10
       ```
+
+## Citation
+Please cite the paper if you find the work useful.
+
+    @inproceedings{wang23detecting,
+       title={Detecting Inactive Cyberwarriors from Online Forums},
+       author={Ruei-Yuan Wang and Hung-Hsuan Chen},
+       booktitle={International Conference on Web Intelligence and Intelligent Agent Technology},
+       year={2023}
+     }
